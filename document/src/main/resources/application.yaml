@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: document
+  data:
+    mongodb:
+      authentication-database: admin
+      username: root
+      password: collacode
+      database: collacode-documents
+      port: 27017
+      host: localhost
+
+server:
+  port: 8082

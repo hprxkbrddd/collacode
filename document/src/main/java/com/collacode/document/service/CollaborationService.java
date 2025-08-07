@@ -1,0 +1,60 @@
+package com.collacode.document.service;
+
+import com.collacode.document.crdt.CrdtDocument;
+import com.collacode.document.crdt.CrdtEngine;
+import com.collacode.document.crdt.CrdtOperation;
+import com.collacode.document.repository.DocumentRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class CollaborationService {
+//    private final DocumentRepository repository;
+//    private final CrdtEngine crdtEngine;
+//
+//    public synchronized void applyOperation(String docId, CrdtOperation operation) {
+//        CrdtDocument doc = repository.findById(docId).orElseThrow();
+//
+//        // Трансформируем новую операцию относительно существующих
+//        List<CrdtOperation> transformed = crdtEngine.transformOperations(
+//                doc.getOperations(),
+//                operation
+//        );
+//
+//        // Применяем все операции
+//        String newContent = doc.getContent();
+//        for (CrdtOperation op : transformed) {
+//            newContent = crdtEngine.applyOperation(newContent, op);
+//        }
+//
+//        // Обновляем документ
+//        doc.setContent(newContent);
+//        doc.getOperations().addAll(transformed);
+//        doc.getVersionVector().merge(
+//                operation.getAuthorId(),
+//                operation.getSequenceNumber(),
+//                Math::max
+//        );
+//
+//        repository.save(doc);
+//    }
+//
+//    public List<CrdtOperation> getOperationsSince(String docId, Map<String, Long> clientVector) {
+//        // Возвращаем только те операции, которые новее чем у клиента
+//        return repository.findById(docId)
+//                .map(doc -> doc.getOperations().stream()
+//                        .filter(op -> isOperationNew(op, clientVector))
+//                        .collect(Collectors.toList()))
+//                .orElse(Collections.emptyList());
+//    }
+//
+//    private boolean isOperationNew(CrdtOperation op, Map<String, Long> clientVector) {
+//        // Логика проверки, является ли операция новой для клиента
+//    }
+}

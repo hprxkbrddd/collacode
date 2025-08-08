@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: auth
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/collacode
+          jwk-set-uri: http://localhost:8080/realms/collacode/protocol/openid-connect/certs
+      client:
+        registration:
+          keycloak:
+            client-id: ${CLIENT_ID:collacode-client}
+            client-secret: ${CLIENT_SECRET:b5fk9Hdmxn7kFgJDao2SFFkfVoypa60g}
+            authorization-grant-type: authorization_code
+            scope: openid,profile,email
+            redirect-uri: "{baseUrl}/login/oauth2/keycloak"
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/collacode
+            user-name-attribute: preferred_username
+  datasource:
+    url: jdbc:postgresql://localhost:5432/keycloak
+    username: keycloak
+    password: keycloak
+
+keycloak:
+  url:
+    login: http://localhost:8080/realms/collacode/protocol/openid-connect
+    reg: http://localhost:8080/admin/realms/collacode
+  admin-username: client_admin
+  admin-password: admin
+
+server:
+  port: 8083

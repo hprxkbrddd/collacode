@@ -1,0 +1,38 @@
+package com.collacode.auth.component;
+
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Component
+public class JwtConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+    /**
+     * Convert the source object of type {@code S} to target type {@code T}.
+     * <br>
+     * P.S. Keycloak has to be configured to have role mapper, so roles from {@code authorities} claim come with 'ROLE_' prefix.
+     *
+     * @param source the source object to convert, which must be an instance of {@code S} (never {@code null})
+     * @return the converted object, which must be an instance of {@code T} (potentially {@code null})
+     * @throws IllegalArgumentException if the source cannot be converted to the desired target type
+     */
+    @Override
+    public AbstractAuthenticationToken convert(Jwt source) {
+        List<String> authorities = source.getClaim("authorities");
+        if (authorities == null) {
+            authorities = Collections.emptyList();
+        }
+        Set<GrantedAuthority> grantedAuthorities = authorities.stream().map(
+                SimpleGrantedAuthority::new
+        ).collect(Collectors.toSet());
+        return new JwtAuthenticationToken(source, grantedAuthorities, source.getSubject());
+    }
+}

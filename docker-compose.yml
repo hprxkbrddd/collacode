@@ -4,9 +4,9 @@ services:
   postgres:
     image: docker.io/postgres:17
     environment:
-      POSTGRES_DB: collacode
-      POSTGRES_USER: collacode
-      POSTGRES_PASSWORD: collacode
+      POSTGRES_DB: keycloak  # Изменено с collacode на keycloak
+      POSTGRES_USER: keycloak  # Изменено с collacode на keycloak
+      POSTGRES_PASSWORD: keycloak  # Изменено с collacode на keycloak
     ports:
       - "5432:5432"
     volumes:

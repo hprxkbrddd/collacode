@@ -27,11 +27,9 @@ extra["springCloudVersion"] = "2025.0.0"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
-	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.springframework.cloud:spring-cloud-starter-gateway-server-webmvc")
+	implementation("org.springframework.cloud:spring-cloud-starter-gateway-server-webflux")
 	compileOnly("org.projectlombok:lombok")
-	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+	implementation("io.jsonwebtoken:jjwt-api:0.12.6")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")

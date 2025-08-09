@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: doc-service
+              uri: http://localhost:8082
+              predicates:
+                - Path=/collacode/v1/doc/**
+              filters:
+                - name: AuthFilter
+                  args:
+                    authServiceUrl: http://localhost:8083/collacode/v1/auth/validate
+
+
+            - id: auth-service
+              uri: http://localhost:8083
+              predicates:
+                - Path=/collacode/v1/auth/**
+
+server:
+  port: 8084
+
+url:
+  auth: http://localhost:8083/collacode/v1/auth
+  document: http://localhost:8082/collacode/v1/doc

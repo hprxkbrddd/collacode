@@ -1,40 +1,46 @@
 package com.collacode.auth.service;
 
-import com.collacode.auth.dto.AuthDTO;
+import com.collacode.auth.component.CCJwtDecoder;
 import com.collacode.auth.dto.RegistrationDTO;
 import com.collacode.auth.dto.TokenResponseDTO;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
+@RequiredArgsConstructor
 public class KeycloakService {
-    @Value("${keycloak.url.login}")
-    private String keycloakLoginUrl;
-    @Value("${keycloak.url.reg}")
-    private String keycloakRegUrl;
+    @Value("${keycloak.url.public}")
+    private String keycloakPublicUrl;
+    @Value("${keycloak.url.admin}")
+    private String keycloakAdminUrl;
 
-    private WebClient webClientLogin;
-    private WebClient webClientReg;
+    private WebClient webClientPublic;
+    private WebClient webClientAdmin;
+    private final CCJwtDecoder jwtDecoder;
 
     @PostConstruct
     public void init(){
-        this.webClientLogin = WebClient.builder()
-                .baseUrl(keycloakLoginUrl)
+        this.webClientPublic = WebClient.builder()
+                .baseUrl(keycloakPublicUrl)
                 .build();
-        this.webClientReg = WebClient.builder()
-                .baseUrl(keycloakRegUrl)
+        this.webClientAdmin = WebClient.builder()
+                .baseUrl(keycloakAdminUrl)
                 .build();
     }
     @Value("${spring.security.oauth2.client.registration.keycloak.client-id}")
@@ -67,7 +73,7 @@ public class KeycloakService {
 
                     user.setCredentials(List.of(credential));
 
-                    return webClientReg.post()
+                    return webClientAdmin.post()
                             .uri("/users")
                             .header("Authorization", "Bearer " + token.access_token())
                             .contentType(MediaType.APPLICATION_JSON)
@@ -93,11 +99,17 @@ public class KeycloakService {
         formData.add("password", password);
         formData.add("scope", "openid");
 
-        return webClientLogin.post()
+        return webClientPublic.post()
                 .uri("/token")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .bodyValue(formData)
                 .retrieve()
                 .bodyToMono(TokenResponseDTO.class);
+    }
+
+    public Boolean validate(String token){
+        Instant exp = jwtDecoder.jwtDecoder().decode(token).getExpiresAt();
+        return exp != null && !exp.isBefore(Instant.now());
+
     }
 }

@@ -4,6 +4,7 @@ import com.collacode.auth.dto.AuthDTO;
 import com.collacode.auth.dto.RegistrationDTO;
 import com.collacode.auth.service.KeycloakService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -15,9 +16,9 @@ public class KeycloakController {
 
     private final KeycloakService keycloakService;
 
-    @GetMapping("/hello")
-    public ResponseEntity<String> hello(){
-        return ResponseEntity.ok("HELLO");
+    @GetMapping("/validate")
+    public Boolean validate(@RequestHeader("Authorization") String header){
+        return keycloakService.validate(header.substring(7));
     }
 
     @PostMapping("/token")

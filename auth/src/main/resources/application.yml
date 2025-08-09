@@ -26,8 +26,8 @@ spring:
 
 keycloak:
   url:
-    login: http://localhost:8080/realms/collacode/protocol/openid-connect
-    reg: http://localhost:8080/admin/realms/collacode
+    public: http://localhost:8080/realms/collacode/protocol/openid-connect
+    admin: http://localhost:8080/admin/realms/collacode
   admin-username: client_admin
   admin-password: admin
 

@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Отключить CSRF для API
                 .authorizeHttpRequests(request -> {
                     request
-                            .requestMatchers("/collacode/v1/auth/token", "/collacode/v1/auth/register" ,"/v3/api-docs/**",
+                            .requestMatchers("/collacode/v1/auth/token", "/collacode/v1/auth/register", "/collacode/v1/auth/validate","/v3/api-docs/**",
                                     "/swagger-ui/**",
                                     "/swagger-resources/**",
                                     "/webjars/**").permitAll()

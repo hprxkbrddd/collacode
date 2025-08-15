@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +28,12 @@ public class DocumentApplication {
 			Map<String, Long> vectorClock = new HashMap<>();
 			vectorClock.put("client1", 1L);
 			String content = "some content";
-			CrdtDocument document = new CrdtDocument(
-					"my document",
-					content,
-					vectorClock,
-					Collections.emptyList()
-			);
+//			CrdtDocument document = new CrdtDocument(
+//					"my document",
+//					content,
+//					vectorClock,
+//					Collections.emptyList()
+//			);
 
 //			usingMongoTemplateAndQuery(repository, mongoTemplate, content, document);
 		};

@@ -1,5 +1,6 @@
 package com.collacode.document.crdt;
 
+import com.collacode.document.rga.RGA;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,7 +10,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -21,7 +21,7 @@ public class CrdtDocument {
 
     private String title;
 
-    private String content; // Текущее состояние документа (опционально, можно вычислять)
+    private RGA<Character> content; // Текущее состояние документа (опционально, можно вычислять)
 
     @Version
     private Long version; // Оптимистичная блокировка
@@ -32,25 +32,16 @@ public class CrdtDocument {
 
     public CrdtDocument(String title) {
         this.title = title;
-        this.content = "";
         this.versionVector = new VectorClock();
+        this.content = new RGA<>(this.versionVector);
         this.operations = Collections.emptyList();
     }
 
-    public CrdtDocument(String title, String content) {
-        this.title = title;
-        this.content = content;
-        this.versionVector = new VectorClock();
-        this.operations = Collections.emptyList();
-    }
-
-    public CrdtDocument(String title,
-                        String content,
-                        Map<String, Long> versionVector,
-                        List<CrdtOperation> operations) {
-        this.title = title;
-        this.content = content;
-        this.versionVector = new VectorClock(versionVector);
-        this.operations = operations;
+    public String stringContent(){
+        StringBuilder stringContent = new StringBuilder();
+        for (Character symbol : content.toList()){
+            stringContent.append(symbol);
+        }
+        return stringContent.toString();
     }
 }

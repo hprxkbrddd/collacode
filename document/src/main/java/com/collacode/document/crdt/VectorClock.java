@@ -2,7 +2,10 @@ package com.collacode.document.crdt;
 
 import lombok.Getter;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Getter
 public class VectorClock {
@@ -42,8 +45,41 @@ public class VectorClock {
 
         return atLeastOneLess; // true, если все ≤ и хотя бы одно <
     }
+
+    /**
+     * Проверяет, являются ли векторные часы конкурентными (не сравнимыми)
+     * @param other другие векторные часы для сравнения
+     * @return true если часы конкурентны (ни один не включает другой)
+     */
+    public boolean isConcurrent(VectorClock other) {
+        boolean thisGreater = false;
+        boolean otherGreater = false;
+
+        Set<String> allKeys = new HashSet<>();
+        allKeys.addAll(clock.keySet());
+        allKeys.addAll(other.clock.keySet());
+
+        for (String key : allKeys) {
+            long thisValue = clock.getOrDefault(key, 0L);
+            long otherValue = other.clock.getOrDefault(key, 0L);
+
+            if (thisValue > otherValue) thisGreater = true;
+            else if (thisValue < otherValue) otherGreater = true;
+
+            if (thisGreater && otherGreater) return true;
+        }
+
+        return false;
+    }
+
     public static boolean clockComparator(VectorClock earlier, VectorClock later) {
         return later.isBefore(earlier);
     }
-    // Другие методы работы с векторными часами
+
+    public void merge(VectorClock anotherVector){
+        Map<String, Long> anotherClock = anotherVector.getClock();
+        for (String anotherKey : anotherClock.keySet()){
+            clock.merge(anotherKey, anotherClock.get(anotherKey), Long::max);
+        }
+    }
 }

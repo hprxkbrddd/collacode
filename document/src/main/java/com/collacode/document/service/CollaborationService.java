@@ -2,9 +2,10 @@ package com.collacode.document.service;
 
 import com.collacode.document.crdt.CrdtDocument;
 import com.collacode.document.crdt.CrdtEngine;
-import com.collacode.document.crdt.VectorClock;
 import com.collacode.document.crdt.CrdtOperation;
+import com.collacode.document.crdt.VectorClock;
 import com.collacode.document.repository.DocumentRepository;
+import com.collacode.document.rga.RGA;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +29,9 @@ public class CollaborationService {
         );
 
         // Применяем все операции
-        String newContent = doc.getContent();
+        RGA<Character> newContent = doc.getContent();
         for (CrdtOperation op : transformed) {
-            newContent = crdtEngine.applyOperation(newContent, op);
+            crdtEngine.applyOperation(newContent, op);
         }
 
         // Обновляем документ
@@ -55,6 +56,6 @@ public class CollaborationService {
     }
 
     private boolean isOperationNew(CrdtOperation op, VectorClock clientVector) {
-        return VectorClock.clockComparator(op.dependencies(), clientVector);
+        return VectorClock.clockComparator(op.vectorClock(), clientVector);
     }
 }

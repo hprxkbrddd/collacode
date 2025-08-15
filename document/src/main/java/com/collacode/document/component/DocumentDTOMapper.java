@@ -14,8 +14,8 @@ public class DocumentDTOMapper {
         return new CrdtDocumentDTO(
                 doc.getId(),
                 doc.getTitle(),
-                doc.getContent(),
-                doc.getVersionVector(),
+                doc.stringContent(),
+                doc.getVersionVector().getClock(),
                 doc.getOperations()
         );
     }

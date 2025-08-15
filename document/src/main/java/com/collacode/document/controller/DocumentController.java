@@ -1,11 +1,9 @@
 package com.collacode.document.controller;
 
-import com.collacode.document.crdt.CrdtDocument;
 import com.collacode.document.dto.CrdtDocumentDTO;
 import com.collacode.document.dto.CrdtDocumentSmallDTO;
 import com.collacode.document.dto.ManyCrdtDocsDTO;
 import com.collacode.document.service.DocumentService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

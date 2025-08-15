@@ -8,7 +8,6 @@ import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,21 +26,21 @@ public class CrdtDocument {
     @Version
     private Long version; // Оптимистичная блокировка
 
-    private Map<String, Long> versionVector; // Вектор часов для клиентов
+    private VectorClock versionVector; // Вектор часов для клиентов
 
     private List<CrdtOperation> operations;
 
     public CrdtDocument(String title) {
         this.title = title;
         this.content = "";
-        this.versionVector = Collections.emptyMap();
+        this.versionVector = new VectorClock();
         this.operations = Collections.emptyList();
     }
 
     public CrdtDocument(String title, String content) {
         this.title = title;
         this.content = content;
-        this.versionVector = Collections.emptyMap();
+        this.versionVector = new VectorClock();
         this.operations = Collections.emptyList();
     }
 
@@ -51,7 +50,7 @@ public class CrdtDocument {
                         List<CrdtOperation> operations) {
         this.title = title;
         this.content = content;
-        this.versionVector = versionVector;
+        this.versionVector = new VectorClock(versionVector);
         this.operations = operations;
     }
 }

@@ -4,7 +4,6 @@ import com.collacode.auth.dto.AuthDTO;
 import com.collacode.auth.dto.RegistrationDTO;
 import com.collacode.auth.service.KeycloakService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;

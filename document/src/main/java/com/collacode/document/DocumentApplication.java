@@ -1,7 +1,6 @@
 package com.collacode.document;
 
 import com.collacode.document.crdt.CrdtDocument;
-import com.collacode.document.crdt.CrdtEngine;
 import com.collacode.document.repository.DocumentRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

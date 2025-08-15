@@ -28,6 +28,7 @@ extra["springCloudVersion"] = "2025.0.0"
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
 	implementation("org.springframework.cloud:spring-cloud-starter-gateway-server-webflux")
+	implementation("org.springframework.boot:spring-boot-starter-websocket:3.5.4")
 	compileOnly("org.projectlombok:lombok")
 	implementation("io.jsonwebtoken:jjwt-api:0.12.6")
 	annotationProcessor("org.projectlombok:lombok")

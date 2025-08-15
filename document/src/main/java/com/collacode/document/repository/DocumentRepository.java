@@ -2,9 +2,6 @@ package com.collacode.document.repository;
 
 import com.collacode.document.crdt.CrdtDocument;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-
-import java.util.Optional;
 
 public interface DocumentRepository extends MongoRepository<CrdtDocument, String> {
 

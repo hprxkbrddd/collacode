@@ -2,6 +2,7 @@ package com.collacode.api_gateway.component;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpStatus;
@@ -9,12 +10,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
+@Setter
 public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
     private final WebClient webClient;
+    @Value("${url.auth}")
+    private String authPath;
 
     public AuthFilter() {
         super(Config.class);
-        this.webClient = WebClient.builder().baseUrl("http://localhost:8083").build();
+        this.webClient = WebClient.builder().baseUrl(authPath).build();
     }
 
     @Override
@@ -49,7 +53,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
             System.out.println("Validating token via auth-service...");
 
             return webClient.get()
-                    .uri("/collacode/v1/auth/validate")
+                    .uri("/validate")
                     .header("Authorization", header)
                     .retrieve()
                     .toBodilessEntity()

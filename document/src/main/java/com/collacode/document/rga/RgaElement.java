@@ -1,15 +1,21 @@
 package com.collacode.document.rga;
 
 import com.collacode.document.crdt.VectorClock;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Setter
 @AllArgsConstructor
 public class RgaElement<T> {
+    @Getter
     private String id;
     private T value;
+    @Getter
     private VectorClock vectorClock;
+    @Getter
     private boolean isTombstone;
+
+    public T getValue() {
+        return isTombstone ? null : value;
+    }
 
 }

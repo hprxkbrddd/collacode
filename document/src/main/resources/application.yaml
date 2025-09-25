@@ -6,9 +6,17 @@ spring:
       authentication-database: admin
       username: root
       password: collacode
-      database: collacode-documents
+      database: collacodeDocument
       port: 27017
       host: localhost
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/realms/collacode/protocol/openid-connect/certs
+
+collacode:
+  user-service-url: http://localhost:8083/collacode/v1/users
 
 server:
   port: 8082

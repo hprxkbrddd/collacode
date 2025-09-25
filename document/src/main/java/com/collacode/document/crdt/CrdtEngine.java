@@ -16,7 +16,6 @@ public class CrdtEngine {
             case INSERT -> document.insert(op.value(), op.anchorId(), op.vectorClock());
             case DELETE -> document.remove(op.anchorId(), op.vectorClock());
         }
-        ;
     }
 
     public List<CrdtOperation> transformOperations(List<CrdtOperation> ops, CrdtOperation newOp) {

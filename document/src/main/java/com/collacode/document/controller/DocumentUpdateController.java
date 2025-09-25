@@ -1,28 +1,37 @@
 package com.collacode.document.controller;
 
+import com.collacode.document.crdt.CrdtDocument;
 import com.collacode.document.crdt.CrdtOperation;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
+import com.collacode.document.service.CollaborationService;
+import com.collacode.document.service.DocumentService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.*;
+import org.springframework.stereotype.Controller;
 
+@Controller
+@RequiredArgsConstructor
 public class DocumentUpdateController {
-    /**
-     * Обрабатывает сообщения об обновлении документа и рассылает их всем подписчикам
-     * @param update Объект с изменениями документа
-     * @param docId ID документа из URL
-     * @return Возвращает то же обновление для рассылки всем подписчикам
-     *
-     * Пример клиентского запроса:
-     * stompClient.send("/app/document/123/update", {}, JSON.stringify(update));
-     */
-    @MessageMapping("/document/{docId}/update")  // Обрабатывает сообщения, отправленные на "/app/document/{docId}/update"
-    @SendTo("/topic/document/{docId}")  // Результат метода отправляется всем подписчикам "/topic/document/{docId}"
-    public CrdtOperation handleUpdate(
-            @Payload CrdtOperation update,  // Тело STOMP сообщения
-            @DestinationVariable String docId  // Переменная из URL
+
+    private final CollaborationService collaborationService;
+    private final DocumentService documentService;
+
+    // Обработка подписки на документ
+    @MessageMapping("/subscribe/{docId}")
+    @SendTo("/topic/doc")
+    public CrdtDocument subscribeToDocument(
+            @DestinationVariable String docId
     ) {
-        // Здесь можно добавить логику валидации или обработки перед рассылкой
-        return update;  // Рассылаем полученное обновление всем подписчикам
+        return documentService.getById(docId);
+    }
+
+    // Обработка изменений документа
+    @MessageMapping("/documents/{docId}/edit")
+    public void handleDocumentEdit(
+            @DestinationVariable String docId,
+            @Payload CrdtOperation operation
+//            ,@Header("Authorization") String token
+    ) {
+        collaborationService.applyOperation(docId, operation);
     }
 }

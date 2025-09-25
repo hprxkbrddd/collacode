@@ -7,26 +7,30 @@ spring:
     gateway:
       server:
         webflux:
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowed-origins: "http://localhost:4200"
+                allowed-methods: "*"
+                allowed-headers: "*"
+                allow-credentials: true
           routes:
-            - id: doc-service
-              uri: http://localhost:8082
-              predicates:
-                - Path=/collacode/v1/doc/**
-              filters:
-                - name: AuthFilter
-                  args:
-                    authServiceUrl: http://localhost:8083/collacode/v1/auth/validate
             - id: auth-service
               uri: http://localhost:8083
               predicates:
                 - Path=/collacode/v1/auth/**
-            - id: websocket-route
-              uri: ws://localhost:8082
+            - id: doc-service
+              uri: http://localhost:8082
               predicates:
-                - Path=/ws/**           # WebSocket-эндпоинт
+                - Path=/collacode/v1/doc/**
+            - id: websocket_route
+              uri: http://localhost:8082
+              predicates:
+                - Path=/ws/**
               filters:
-                - RewritePath=/ws/(?<segment>.*), /$\{segment}  # Убираем /ws из пути
-
+                - name: AuthFilter
+                  args:
+                    authServiceUrl: http://localhost:8083/collacode/v1/auth/validate
 server:
   port: 8084
 

@@ -5,9 +5,12 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import static org.apache.tomcat.websocket.server.UpgradeUtil.isWebSocketUpgradeRequest;
 
 @Component
 @Setter
@@ -29,6 +32,12 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
             // Логируем путь запроса
             String path = exchange.getRequest().getPath().toString();
             System.out.println("Request path: " + path);
+
+            // 1. Пропускаем все WebSocket и SockJS запросы
+            if (isWebSocketOrSockJsRequest(path, exchange.getRequest().getHeaders())) {
+                System.out.println("🔄 Skipping auth for WebSocket/SockJS request: " + path);
+                return chain.filter(exchange);
+            }
 
             // Пропускаем аутентификацию для эндпоинтов auth-service
             if (path.startsWith("/collacode/v1/auth")) {
@@ -70,6 +79,25 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
         });
     }
 
+    private boolean isWebSocketOrSockJsRequest(String path, HttpHeaders headers) {
+        // WebSocket upgrade request
+        String connection = headers.getFirst("Connection");
+        String upgrade = headers.getFirst("Upgrade");
+        boolean isWebSocketUpgrade = "websocket".equalsIgnoreCase(upgrade) &&
+                connection != null && connection.toLowerCase().contains("upgrade");
+
+        // SockJS endpoints (точное совпадение)
+        boolean isSockJsEndpoint = path.equals("/ws") ||
+                path.startsWith("/ws/") ||
+                path.contains("/info") ||
+                path.contains("/websocket") ||
+                path.contains("/xhr") ||
+                path.contains("/jsonp") ||
+                path.contains("/iframe") ||
+                path.contains("/send");
+
+        return isWebSocketUpgrade || isSockJsEndpoint;
+    }
 
     @Getter
     @Setter

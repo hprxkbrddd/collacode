@@ -4,7 +4,7 @@ import com.collacode.auth.dto.UserEntityDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Id;
 
 @Entity
 @Data
@@ -20,9 +20,6 @@ public class UserEntity {
     public UserEntityDTO toDTO() {
         return new UserEntityDTO(
                 id,
-                email,
-                firstName,
-                lastName,
                 username
         );
     }

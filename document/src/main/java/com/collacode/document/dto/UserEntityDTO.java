@@ -1,4 +1,4 @@
-package com.collacode.auth.dto;
+package com.collacode.document.dto;
 
 public record UserEntityDTO(
         String id,

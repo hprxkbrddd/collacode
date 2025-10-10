@@ -1,6 +1,7 @@
 package com.collacode.document.crdt;
 
 import com.collacode.document.dto.ParticipantDTO;
+import com.collacode.document.dto.UserEntityDTO;
 import com.collacode.document.enums.Role;
 import com.collacode.document.rga.RGA;
 import lombok.Getter;
@@ -25,7 +26,6 @@ public class CrdtDocument {
     private String title;
     private RGA<Character> content;
     private HashSet<ParticipantDTO> participants;
-    private final
 
     @Version
     private Long version; // Оптимистичная блокировка
@@ -34,12 +34,11 @@ public class CrdtDocument {
 
     private List<CrdtOperation> operations;
 
-    public CrdtDocument(String title, String ownerId) {
-
+    public CrdtDocument(String title, UserEntityDTO user) {
+        this.participants.add(new ParticipantDTO(user, Role.OWNER));
         this.title = title;
         this.versionVector = new VectorClock();
         this.content = new RGA<>(this.versionVector);
-
         this.operations = Collections.emptyList();
     }
 
